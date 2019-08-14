@@ -1,5 +1,4 @@
 require "./enum"
-require "tb"
 
 struct TB::Data::DepositAddress
   DB.mapping(

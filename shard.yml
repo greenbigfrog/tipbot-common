@@ -14,6 +14,8 @@ dependencies:
   pg:
     github: greenbigfrog/crystal-pg
     branch: add-bigdecimal
+  raven:
+    github: sija/raven.cr
 
 
 development_dependencies:
