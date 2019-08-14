@@ -3,5 +3,5 @@ module TB
   TERMS      = "In no event shall this bot or its dev be responsible for any loss, theft or misdirection of funds."
   SUPPORT    = "<https://contact.tipbot.info>"
   LOG        = Logger.new(STDOUT)
-  TB::DATA         = PG.connect("postgresql://postgres@database:5432/tipbot")
+  DATA       = PG.connect("postgresql://postgres@database:5432/tipbot")
 end
