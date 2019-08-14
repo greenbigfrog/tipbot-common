@@ -1,3 +1,5 @@
+require "pg"
+
 struct TB::Data::Balance
   DB.mapping(
     account_id: Int64,
