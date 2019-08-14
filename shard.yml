@@ -7,3 +7,15 @@ authors:
 crystal: 0.30.1
 
 license: MIT
+
+dependencies:
+  bitcoin_rpc:
+    github: citizen428/bitcoin_rpc
+  pg:
+    github: greenbigfrog/crystal-pg
+    branch: add-bigdecimal
+
+
+development_dependencies:
+  ameba:
+    github: veelenga/ameba
