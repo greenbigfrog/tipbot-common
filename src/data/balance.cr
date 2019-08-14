@@ -1,4 +1,4 @@
-require "pg"
+require "db"
 
 struct TB::Data::Balance
   ::DB.mapping(
