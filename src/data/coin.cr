@@ -58,7 +58,7 @@ struct TB::Data::Coin
 
     high_balance: BigDecimal,
 
-    balance_broadcast: Text,
+    balance_broadcast: String,
 
     created_time: Time
   )
