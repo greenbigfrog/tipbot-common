@@ -166,7 +166,7 @@ module TB::Data
     end
 
     def complete?
-      true if @discord_id && @twitch_id
+      return true if @discord_id && @twitch_id
       false
     end
   end
