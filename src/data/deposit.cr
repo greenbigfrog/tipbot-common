@@ -30,8 +30,8 @@ struct TB::Data::Deposit
   		SQL
   end
 
-  def self.read_new
-    TB::DATA.query_all("SELECT * FROM deposits WHERE status = 'NEW'", as: self)
+  def self.read_new(db : DB::Connection)
+    db.query_all("SELECT * FROM deposits WHERE status = 'NEW' FOR UPDATE", as: self)
   end
 
   def mark_never

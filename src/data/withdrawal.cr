@@ -18,11 +18,11 @@ struct TB::Data::Withdrawal
     TB::DATA.query_one("SELECT * FROM withdrawals WHERE id = $1", id, as: self)
   end
 
-  def self.read_pending_withdrawals
-    TB::DATA.query_all("SELECT * FROM withdrawals WHERE pending = true", as: self)
+  def self.read_pending_withdrawals(db : DB::Connection)
+    db.query_all("SELECT * FROM withdrawals WHERE pending = true FOR UPDATE", as: self)
   end
 
-  def self.update_pending(id : Int32, status : Bool)
-    TB::DATA.exec("UPDATE withdrawals SET pending = $1 WHERE id = $2", status, id)
+  def self.update_pending(id : Int32, status : Bool, db : DB::Connection)
+    db.exec("UPDATE withdrawals SET pending = $1 WHERE id = $2", status, id)
   end
 end
