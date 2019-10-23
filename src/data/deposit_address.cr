@@ -15,20 +15,20 @@ struct TB::Data::DepositAddress
       db = tx.connection
       begin
         address = db.query_one?("SELECT address FROM deposit_addresses WHERE active = true AND account_id = $1 AND coin = $2", user.id, coin.id, as: String)
-        return address unless address.nil?
 
-        api = TB::CoinApi.new(coin, Logger.new(STDOUT), backoff: false)
-        address = api.new_address
+        if address.nil?
+          api = TB::CoinApi.new(coin, Logger.new(STDOUT), backoff: false)
+          address = api.new_address
 
-        db.exec("INSERT INTO deposit_addresses (account_id, coin, address, active) VALUES ($1, $2, $3, true)", user.id, coin.id, address)
-        LOG.info("Generated new address for user #{user} and coin #{coin.name_short}: #{address}")
+          db.exec("INSERT INTO deposit_addresses (account_id, coin, address, active) VALUES ($1, $2, $3, true)", user.id, coin.id, address)
+          LOG.info("Generated new address for user #{user} and coin #{coin.name_short}: #{address}")
+        end
       rescue ex : PQ::PQError
         LOG.warn(ex.inspect_with_backtrace)
         tx.rollback
-        return Error.new
       end
     end
-    address
+    address || Error.new
   end
 
   def self.read(address : String) : self?
