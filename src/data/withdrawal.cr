@@ -11,7 +11,7 @@ struct TB::Data::Withdrawal
   )
 
   def self.create(coin : Coin, account_id : Int32, address : String, amount : BigDecimal, transaction : Int32, db : DB::Connection = TB::DATA.connection)
-    db.query_one("INSERT INTO withdrawals(coin, account_id, address, amount, transaction) VALUES ($1, $2, $3, $4, $5) RETURNING id", coin.id, user_id, address, amount, transaction, as: Int32)
+    db.query_one("INSERT INTO withdrawals(coin, account_id, address, amount, transaction) VALUES ($1, $2, $3, $4, $5) RETURNING id", coin.id, account_id, address, amount, transaction, as: Int32)
   end
 
   def self.read(id : Int32)
