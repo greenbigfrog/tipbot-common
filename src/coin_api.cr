@@ -39,7 +39,7 @@ class TB::CoinApi
     input.each do |address, amount|
       hash[address] = amount.to_f64
     end
-    @rpc.send_many("help", hash).as_s
+    @rpc.send_many("", hash).as_s
   end
 
   def new_address
