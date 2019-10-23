@@ -22,11 +22,11 @@ struct TB::Data::Transaction
   #   TB::DATA.query_one?("SELECT * FROM transactions WHERE id = $1", id, as: self)
   # end
 
-  def self.read_amount(id : Int64, db : DB::Connection)
+  def self.read_amount(id : Int32, db : DB::Connection)
     db.query_one?("SELECT amount FROM transactions WHERE id = $1", id, as: BigDecimal)
   end
 
-  def self.update_fee(id : Int64, adjust_by : BigDecimal, db : DB::Connection)
+  def self.update_fee(id : Int32, adjust_by : BigDecimal, db : DB::Connection)
     amount = read_amount(id, db).not_nil!
     new_amount = amount - adjust_by
     db.exec("UPDATE transactions SET amount = $1 WHERE id = $2", new_amount, id)
