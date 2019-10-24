@@ -57,20 +57,12 @@ module TB::Data
       read(id.to_i32)
     end
 
-    def deposit(amount : BigDecimal, coin : Coin, transaction_hash : String)
-      TB::DATA.transaction do |tx|
-        db = tx.connection
-        begin
-          db.exec(<<-SQL, coin.id, amount, transaction_hash, @id)
-          INSERT INTO transactions(coin, memo, amount, coin_transaction_hash, account_id)
-          VALUES ($1, 'DEPOSIT', $2, $3, $4)
-          SQL
-          update_balance(coin, db)
-        rescue ex : PQ::PQError
-          tx.rollback
-          raise "Something went wrong while crediting deposit: #{ex}"
-        end
-      end
+    def deposit(amount : BigDecimal, coin : Coin, transaction_hash : String, db : DB::Connection)
+      db.exec(<<-SQL, coin.id, amount, transaction_hash, @id)
+      INSERT INTO transactions(coin, memo, amount, coin_transaction_hash, account_id)
+      VALUES ($1, 'DEPOSIT', $2, $3, $4)
+      SQL
+      update_balance(coin, db)
     end
 
     def transfer(amount : BigDecimal, coin : Coin, to : Array(Account), memo : TransactionMemo, *, db : DB::Connection)
