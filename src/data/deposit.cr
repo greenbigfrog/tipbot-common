@@ -34,15 +34,15 @@ struct TB::Data::Deposit
     db.query_all("SELECT * FROM deposits WHERE status = 'NEW' FOR UPDATE", as: self)
   end
 
-  def mark_never
-    TB::DATA.exec("UPDATE deposits SET status = 'NEVER' WHERE txhash = $1", @txhash)
+  def mark_never(db : DB::Connection)
+    db.exec("UPDATE deposits SET status = 'NEVER' WHERE txhash = $1", @txhash)
   end
 
-  def mark_never_with_account(account_id : Int32)
-    TB::DATA.exec("UPDATE deposits SET status = 'NEVER', account_id = $2 WHERE txhash = $1", @txhash, account_id)
+  def mark_never_with_account(account_id : Int32, db : DB::Connection)
+    db.exec("UPDATE deposits SET status = 'NEVER', account_id = $2 WHERE txhash = $1", @txhash, account_id)
   end
 
-  def mark_credited(account_id : Int32)
-    TB::DATA.exec("UPDATE deposits SET status = 'CREDITED', account_id = $2 WHERE txhash = $1", @txhash, account_id)
+  def mark_credited(account_id : Int32, db : DB::Connection)
+    db.exec("UPDATE deposits SET status = 'CREDITED', account_id = $2 WHERE txhash = $1", @txhash, account_id)
   end
 end
