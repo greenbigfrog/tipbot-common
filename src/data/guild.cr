@@ -55,15 +55,23 @@ struct TB::Data::Discord::Guild
   end
 
   def self.read_prefix(id : Int64, coin : Coin)
-    TB::DATA.query_one?("SELECT prefix FROM guilds, configs WHERE guild_id = $1 AND coin = $2", id, coin.id, as: String?)
+    sql = <<-SQL
+    SELECT prefix
+    FROM guilds
+    LEFT OUTER JOIN configs ON guilds.id = configs.id
+    WHERE guild_id = $1 AND coin = $2;
+    SQL
+    TB::DATA.query_one?(sql, id, coin.id, as: String?)
   end
 
   def self.read_config(id : Int64, coin : Coin, field : String) : Bool?
-    TB::DATA.query_one?("SELECT #{field} FROM guilds, configs WHERE guild_id = $1 AND coin = $2", id, coin.id, as: Bool?)
-  end
-
-  def self.update_prefix(id : Int64, coin : Coin, prefix : String?)
-    update_config(id, coin, "prefix", prefix)
+    sql = <<-SQL
+    SELECT #{field}
+    FROM guilds
+    LEFT OUTER JOIN configs ON guilds.id = configs.id
+    WHERE guild_id = $1 AND coin = $2;
+    SQL
+    TB::DATA.query_one?(sql, id, coin.id, as: Bool?)
   end
 
   def self.update_config(config_id : Int64, prefix : String?,
@@ -95,6 +103,12 @@ struct TB::Data::Discord::Guild
   end
 
   def self.read_decimal_config(id : Int64, coin : Coin, field : String) : BigDecimal?
-    TB::DATA.query_one?("SELECT #{field} FROM guilds, configs WHERE guild_id = $1 AND coin = $2", id, coin.id, as: BigDecimal?)
+    sql = <<-SQL
+    SELECT #{field}
+    FROM guilds
+    LEFT OUTER JOIN configs ON guilds.id = configs.id
+    WHERE guild_id = $1 AND coin = $2;
+    SQL
+    TB::DATA.query_one?(sql, id, coin.id, as: BigDecimal?)
   end
 end
