@@ -2,7 +2,6 @@ struct TB::Data::Statistics
   DB.mapping(
     transaction_count: Int64?,
     transaction_sum: BigDecimal?,
-    total: BigDecimal?,
     tip_sum: BigDecimal?,
     soak_sum: BigDecimal?,
     rain_sum: BigDecimal?,
