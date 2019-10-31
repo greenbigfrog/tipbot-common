@@ -5,21 +5,22 @@ struct TB::Data::Statistics
     total: BigDecimal?,
     tip_sum: BigDecimal?,
     soak_sum: BigDecimal?,
-    rain_sum: BigDecimal?
+    rain_sum: BigDecimal?,
+    last_refresh: Time
   )
 
-  @@ttl : Time::Span = 10.minutes
-
-  class_getter last = Time.utc_now
+  TTL = 30.minutes
 
   def self.read
-    TB::DATA.query_one("SELECT * FROM statistics", as: Statistics)
+    stats = TB::DATA.query_one("SELECT * FROM statistics", as: Statistics)
+    if stats.last_refresh < Time.utc_now - TTL
+      update
+      return read
+    end
+    stats
   end
 
   def self.update
-    now = Time.utc_now
-    return unless now > @@last + @@ttl
     TB::DATA.exec("REFRESH MATERIALIZED VIEW statistics")
-    @@last = now
   end
 end
