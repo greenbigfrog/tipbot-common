@@ -36,7 +36,11 @@ struct TB::Data::DepositAddress
   end
 
   def self.read_all_active_for_account(account_id : Int32)
-    TB::DATA.query_all("SELECT * FROM deposit_addresses WHERE active = true AND account_id = $1", account_id, as: self)
+    hash = Hash(Int32, self).new
+    TB::DATA.query_all("SELECT * FROM deposit_addresses WHERE active = true AND account_id = $1", account_id, as: self).each do |address|
+      hash[address.coin] = address
+    end
+    hash
   end
 
   def deactivate
