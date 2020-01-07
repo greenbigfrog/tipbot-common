@@ -22,7 +22,7 @@ module TB::Data
       active: Bool,
       twitch_id: Int64?,
       discord_id: Int64?,
-      streamlabs_token: String,
+      streamlabs_token: String?,
       created_time: Time
     )
 
