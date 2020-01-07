@@ -22,6 +22,7 @@ module TB::Data
       active: Bool,
       twitch_id: Int64?,
       discord_id: Int64?,
+      streamlabs_token: String,
       created_time: Time
     )
 
@@ -72,6 +73,15 @@ module TB::Data
       VALUES
         #{to_string}
         ($1, $2, -1 * $3 * #{to.size}, $4)
+      SQL
+    end
+
+    def transfer(amount : BigDecimal, coin : Coin, to : Int64, memo : TransactionMemo)
+      DATA.exec(<<-SQL, coin.id, memo, amount, to, @id)
+      INSERT INTO transactions(coin, memo, amount, account_id)
+      VALUES
+        ($1, $2, $3, $4),
+        ($1, $2, -1 * $3, $5)
       SQL
     end
 
@@ -160,6 +170,14 @@ module TB::Data
     def complete?
       return true if @discord_id && @twitch_id
       false
+    end
+
+    def self.update_streamlabs_token(user : Int64, token : String)
+      TB::DATA.exec("UPDATE accounts SET streamlabs_token = $1 WHERE id = $2", token, user)
+    end
+
+    def self.read_streamlabs_token(user : Int64)
+      TB::DATA.query_one?("SELECT streamlabs_token FROM accounts WHERE id = $1", user, as: String?)
     end
   end
 end
