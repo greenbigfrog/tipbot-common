@@ -91,7 +91,7 @@ module TB::Data
       TB::DATA.transaction do |tx|
         db = tx.connection
         begin
-          res = db.query_one("INSERT INTO transactions(coin, memo, amount, account_id) VALUES ($1, 'WITHDRAWAL', -1 * $2, $3) RETURNING id", coin.id, reserve_amount, @id, as: Int32)
+          res = db.query_one("INSERT INTO transactions(coin, memo, amount, account_id) VALUES ($1, 'WITHDRAWAL', $2, $3) RETURNING id", coin.id, -1 * reserve_amount, @id, as: Int32)
           id = Withdrawal.create(coin, @id, address, (reserve_amount - coin.tx_fee), res, db)
           update_balance(coin, db)
         rescue ex : PQ::PQError
