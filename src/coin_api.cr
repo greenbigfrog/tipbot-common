@@ -15,7 +15,7 @@ class TB::CoinApi
         rpc = BitcoinRpc.new(@coin.rpc_url, @coin.rpc_username, @coin.rpc_password).tap(&.getinfo)
         break
       rescue ex
-        raise "Unable to connect to RPC" unless backoff
+        raise "Unable to connect to RPC (#{ex.class}: #{ex.message})" unless backoff
         @log.warn("Unable to connect to Coin Daemon (#{ex.class}: #{ex.message}). Retrying after #{retry_delay} seconds.")
         sleep retry_delay
         retry_delay = Math.min(retry_delay * 2, 10)
