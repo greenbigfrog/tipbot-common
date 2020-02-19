@@ -22,6 +22,10 @@ struct TB::Data::TwitchChannel
     TB::DATA.query_all("SELECT name FROM channels", as: String)
   end
 
+  def self.read_names(coin : Coin)
+    TB::DATA.query_all("SELECT name FROM channels WHERE coin = $1", coin.id, as: String)
+  end
+
   def self.read_by_name(name : String)
     TB::DATA.query_one?("SELECT * FROM channels WHERE name = $1", name, as: self)
   end
