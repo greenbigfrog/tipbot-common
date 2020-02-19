@@ -86,7 +86,7 @@ module TB::Data
     end
 
     def withdraw(reserve_amount : BigDecimal, coin : Coin, address : String)
-      return Error.new("insufficient balance") unless balance(coin) >= (reserve_amount + coin.tx_fee)
+      return Error.new("insufficient balance") unless balance(coin) >= reserve_amount
       id = nil
       TB::DATA.transaction do |tx|
         db = tx.connection
