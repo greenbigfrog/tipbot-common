@@ -12,7 +12,7 @@ struct TB::Data::Statistics
 
   def self.read
     stats = TB::DATA.query_one("SELECT * FROM statistics", as: Statistics)
-    if stats.last_refresh < Time.utc_now - TTL
+    if stats.last_refresh < Time.utc - TTL
       update
       return read
     end
