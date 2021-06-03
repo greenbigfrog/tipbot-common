@@ -12,7 +12,7 @@ class TB::CoinApi
     retry_delay = 1
     while rpc.nil?
       begin
-        rpc = BitcoinRpc.new(@coin.rpc_url, @coin.rpc_username, @coin.rpc_password).tap(&.getinfo)
+        rpc = BitcoinRpc.new(@coin.rpc_url, @coin.rpc_username, @coin.rpc_password).tap(&.getnetworkinfo)
         break
       rescue ex
         raise "Unable to connect to RPC (#{ex.class}: #{ex.message})" unless backoff
@@ -23,7 +23,7 @@ class TB::CoinApi
     end
     @rpc = rpc.not_nil!
 
-    @log.debug("#{coin.name_short}: #{@rpc.getinfo}")
+    @log.debug("#{coin.name_short}: #{@rpc.getnetworkinfo}")
   end
 
   def get_info
