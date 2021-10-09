@@ -51,7 +51,7 @@ class TB::CoinApi
   end
 
   def list_transactions(count : Int32)
-    @rpc.list_transactions("", count)
+    @rpc.list_transactions("*", count)
   end
 
   def validate_address(address : String)
