@@ -26,6 +26,14 @@ module TB::Data
       created_time: Time
     )
 
+    def self.read_all()
+      TB::DATA.query_all("SELECT * FROM accounts", as: Account)
+    end
+
+    def possible_balance(coin : Coin, db : DB::Connection)
+      db.query_one?("SELECT true FROM transactions WHERE coin = $1 AND account_id = $2 LIMIT 1;", coin.id, @id, as: Bool?)
+    end
+
     def balance(coin : Coin)
       TB::DATA.query_one?("SELECT balance FROM balances WHERE account_id = $1 AND coin = $2", @id, coin.id, as: BigDecimal) || BigDecimal.new(0)
     end
