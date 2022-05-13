@@ -61,9 +61,10 @@ class TB::CoinApi
   end
 
   def internal?(address : String)
-    a = address_info(address)
-    return unless a
-    a["ismine"].as_bool
+    # a = address_info(address)
+    # return unless a
+    # a["ismine"].as_bool
+    return false
   end
 
   def balance(confirmations = 0) : BigDecimal
