@@ -32,7 +32,7 @@ module TB::Data
     end
 
     def self.read_next_final_contact
-      TB::DATA.query_one?("SELECT * FROM accounts WHERE final_contact = false AND discord_id IS NOT NULL LIMIT 1", as: Account)
+      TB::DATA.query_one?("SELECT * FROM accounts FULL OUTER JOIN balances ON id = account_id WHERE final_contact = false AND ((coin=2 or coin=4) and balance > 100) OR (coin=1 and balance>1) AND discord_id IS NOT NULL LIMIT 1", as: Account)
     end
 
     def set_final_contacted
