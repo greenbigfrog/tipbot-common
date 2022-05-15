@@ -23,11 +23,22 @@ module TB::Data
       twitch_id: Int64?,
       discord_id: Int64?,
       streamlabs_token: String?,
-      created_time: Time
+      created_time: Time,
+      final_contact: Bool
     )
 
-    def self.read_all()
+    def self.read_all
       TB::DATA.query_all("SELECT * FROM accounts", as: Account)
+    end
+
+    def self.read_next_final_contact
+      TB::DATA.query_one?("SELECT * FROM accounts WHERE final_contact = false AND discord_id IS NOT NULL LIMIT 1", as: Account)
+    end
+
+    def set_final_contacted
+      TB::DATA.using_connection do |db|
+        db.exec("UPDATE accounts SET final_contact = true WHERE id = $1", @id)
+      end
     end
 
     def possible_balance(coin : Coin, db : DB::Connection)
